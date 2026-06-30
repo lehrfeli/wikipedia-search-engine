@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ query }} - Wiki Search</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- top bar with search box for re-searching -->
+    <div class="results-header">
+        <a href="/" class="logo-small">Wiki Search</a>
+
+        <form action="/search" method="get" class="results-search-form">
+            <input type="text" name="query" value="{{ query }}">
+            <button type="submit">Search</button>
+
+            <!-- keep the same settings when re-searching -->
+            <input type="hidden" name="index_type" value="{{ index_type }}">
+            <input type="hidden" name="top_k" value="{{ top_k }}">
+        </form>
+    </div>
+
+    <div class="results-body">
+
+        <!-- search info line -->
+        <p class="search-info">
+            About {{ num_results }} results in {{ elapsed }} seconds
+            &mdash; using
+            {% if index_type == "bert" %}
+                <strong>BERT Base (Semantic)</strong>
+            {% elif index_type == "msmarco" %}
+                <strong>MSMARCO DistilBERT (Semantic)</strong>
+            {% else %}
+                <strong>Lucene (BM25)</strong>
+            {% endif %}
+        </p>
+
+        <!-- results list -->
+        {% for r in results %}
+        <div class="result">
+            <div class="result-url">{{ r.url }}</div>
+            <a href="{{ r.url }}" target="_blank" class="result-title">
+                {{ r.title }}
+            </a>
+            <p class="result-snippet">
+                <span class="result-rank">#{{ r.rank }}</span>
+                <span class="result-score">(score: {{ r.score }})</span>
+                &mdash; {{ r.passage[:300] }}{% if r.passage|length > 300 %}...{% endif %}
+            </p>
+        </div>
+        {% endfor %}
+
+        {% if num_results == 0 %}
+        <p>No results found for "{{ query }}".</p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

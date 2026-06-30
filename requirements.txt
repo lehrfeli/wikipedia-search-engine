@@ -1,0 +1,19 @@
+# --- crawler ---
+scrapy
+
+# --- BM25 / Lucene indexing & search ---
+pyserini
+
+# --- dense (BERT) indexing & search ---
+sentence-transformers
+torch
+faiss-cpu
+numpy
+
+# --- web app ---
+flask
+waitress
+
+# --- benchmarking / plots (notebooks, bert_benchmark.py) ---
+pandas
+matplotlib

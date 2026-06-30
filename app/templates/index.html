@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wiki Search</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="home-container">
+
+        <h1 class="logo">Wiki Search</h1>
+        <p class="subtitle">Search Wikipedia articles about Law</p>
+
+        <form action="/search" method="get">
+
+            <!-- search bar -->
+            <div class="search-box">
+                <input type="text" name="query" placeholder="Search..." autofocus>
+                <button type="submit">Search</button>
+            </div>
+
+            <!-- index type radio buttons -->
+            <div class="options">
+                <label>
+                    <input type="radio" name="index_type" value="lucene" checked>
+                    Lucene (BM25)
+                </label>
+                <label>
+                    <input type="radio" name="index_type" value="bert">
+                    BERT Base (Semantic)
+                </label>
+                <label>
+                    <input type="radio" name="index_type" value="msmarco">
+                    MSMARCO DistilBERT (Semantic)
+                </label>
+            </div>
+
+            <!-- top-k selector -->
+            <div class="options">
+                <label for="top_k">Results:</label>
+                <select name="top_k" id="top_k">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+
+        </form>
+
+        <!-- loading message (hidden by default, shown when searching) -->
+        <div id="loading" class="loading-box" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading model and searching... this may take a minute on first use.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // when the form is submitted, show the loading message
+        document.querySelector("form").addEventListener("submit", function() {
+            document.getElementById("loading").style.display = "flex";
+        });
+    </script>
+
+</body>
+</html>
