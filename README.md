@@ -34,6 +34,10 @@ crawler/                indexing/                       search/                 
 4. **App** (`app/`) is a Flask web app that lets a user pick a retrieval method and see results,
    with timing, for the same query.
 
+## Demo
+
+![Search results page](docs/screenshot.png)
+
 ## How the three retrieval methods differ
 
 | Method | Backend | How it ranks documents |
