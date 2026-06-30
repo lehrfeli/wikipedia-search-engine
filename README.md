@@ -1,6 +1,6 @@
 # Wikipedia Search Engine
 
-An end-to-end information retrieval system built for UCR CS242 (Information Retrieval). It crawls
+An end-to-end information retrieval system. It crawls
 Wikipedia, indexes the crawled pages with two different retrieval paradigms — classic lexical
 search (BM25 via Lucene/Pyserini) and dense neural search (BERT embeddings via FAISS) — and serves
 all of it through a small Flask app so the three methods can be compared side by side on the same
@@ -9,19 +9,26 @@ queries.
 ## Architecture
 
 ```
-crawler/                indexing/                       search/                  app/
-┌────────────────┐      ┌─────────────────────────┐     ┌────────────────────┐   ┌──────────┐
-│ wiki_spider.py  │ ───> │ data/crawled/            │     │                     │   │          │
-│ (Scrapy, BFS    │      │   wiki_data.jsonl        │     │                     │   │          │
-│ from seed URL)  │      └─────────────────────────┘     │                     │   │          │
-└────────────────┘               │         │              │                     │   │          │
-                                  │         │              │                     │   │          │
-                  pyserini_indexer.py    bert_indexer.py    │                     │   │          │
-                          │                  │              │                     │   │          │
-                          v                  v              │                     │   │          │
-              data/indexes/wiki_index   data/bert_index/      lucene_searcher.py ─┼──>│  app.py   │
-                                          data/msmarco_index/  bert_searcher.py  ─┘   │ (Flask)  │
-                                                                                       └──────────┘
+crawler/wiki_spider.py   (Scrapy crawl, starting from seed.txt)
+        |
+        v
+data/crawled/wiki_data.jsonl   (one JSON object per page: url, title, text)
+        |
+        +-------------------------------+
+        v                                v
+indexing/pyserini_indexer.py    indexing/bert_indexer.py   (run once per model)
+        |                                |
+        v                                v
+data/indexes/wiki_index          data/bert_index/
+  (Lucene BM25 index)              data/msmarco_index/
+        |                          (FAISS dense-vector indexes)
+        |                                |
+        v                                v
+search/lucene_searcher.py        search/bert_searcher.py
+        |                                |
+        +----------------+---------------+
+                          v
+                     app/app.py   (Flask app, http://localhost:5000)
 ```
 
 1. **Crawler** (`crawler/`) walks Wikipedia starting from a seed article and writes one JSON object
