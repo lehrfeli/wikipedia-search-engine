@@ -1,6 +1,6 @@
 # Wikipedia Search Engine
 
-An end-to-end information retrieval system built for UCR CS242 (Information Retrieval). It crawls
+An end-to-end information retrieval system. It crawls
 Wikipedia, indexes the crawled pages with two different retrieval paradigms — classic lexical
 search (BM25 via Lucene/Pyserini) and dense neural search (BERT embeddings via FAISS) — and serves
 all of it through a small Flask app so the three methods can be compared side by side on the same
